@@ -1,12 +1,20 @@
 # coding=utf-8
 import bs4
 import parser
+import mysql.connector
 
 # main variables
 import telebot
 
 TOKEN = "1006785313:AAEvXqIWpCSvSH2c_KKcrICPm_0B1jTj9ew"
 bot = telebot.TeleBot(TOKEN)
+mydb = mysql.connector.connect(
+  host="91.201.214.132",
+  user="alysu",
+  passwd="123",
+  database="friday"
+)
+cursordb = mydb.cursor()
 
 class User:
     name = ""
@@ -23,6 +31,7 @@ class User:
     scorenumber = ""
     phone = ""
     email = ""
+    chatid = ""
 
 step = 1
 user = User()
@@ -36,9 +45,10 @@ def start_handler(message):
 @bot.message_handler(content_types=['text'])
 def text_handler(message):
     global step
+    global cursordb
     text = message.text.lower()
     chat_id = message.chat.id
-    textString = text.encode("utf-8")
+    textString = text
     if step == 1:
         user.name = textString
         bot.send_message(chat_id, "Отлично. А теперь напишите Вашу фамилию?")
@@ -90,6 +100,11 @@ def text_handler(message):
     if step == 13:
         user.email = textString
         bot.send_message(chat_id, "Отлично, " + user.name + ". Ваш запрос принят ожидайте ответа.")
+        sql = "INSERT INTO user_info (name, surname,lastname,birthdate,idn,idnumber,iddate,idaddress,city,address,cardnumber,scorenumber,phone,email) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        val = (user.name,user.surname,user.lastname,user.birthdate,user.idn, user.idnumber,user.iddate, user.idaddress,user.city,user.address,user.cardnumber,user.scorenumber,user.phone,user.email, chat_id)
+        cursordb.execute(sql, val)
+        mydb.commit()
+        print(cursordb.rowcount,"-" + chat_id + " record inserted.")
         # step = step + 1
 
 
