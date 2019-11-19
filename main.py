@@ -47,7 +47,7 @@ def text_handler(message):
     global step
     global cursordb
     text = message.text
-    chat_id = message.chat.id
+    user.chatid = message.chat.id
     textString = text
     if step == 1:
         user.name = textString
@@ -100,11 +100,11 @@ def text_handler(message):
     if step == 13:
         user.email = textString
         bot.send_message(chat_id, "Отлично, " + user.name + ". Ваш запрос принят ожидайте ответа.")
-        sql = "INSERT INTO user_info (name, surname,lastname,birthdate,idn,idnumber,iddate,idaddress,city,address,cardnumber,scorenumber,phone,email) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-        val = (user.name,user.surname,user.lastname,user.birthdate,user.idn, user.idnumber,user.iddate, user.idaddress,user.city,user.address,user.cardnumber,user.scorenumber,user.phone,user.email, chat_id)
+        sql = "INSERT INTO user_info (name, surname,lastname,birthdate,idn,idnumber,iddate,idaddress,city,address,cardnumber,scorenumber,phone,email) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        val = (user.name,user.surname,user.lastname,user.birthdate,user.idn, user.idnumber,user.iddate, user.idaddress,user.city,user.address,user.cardnumber,user.scorenumber,user.phone,user.email, user.chatid)
         cursordb.execute(sql, val)
         mydb.commit()
-        print(cursordb.rowcount,"-" + chat_id + " record inserted.")
+        print(cursordb.rowcount,"-" + user.chatid + " record inserted.")
         # step = step + 1
 
 
