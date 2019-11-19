@@ -142,3 +142,4 @@ def start_handler(message):
 #     bot.register_next_step_handler(message, get_name);
 
 bot.polling()
+# https://habr.com/ru/post/350648/
