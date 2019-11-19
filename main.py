@@ -46,7 +46,7 @@ def start_handler(message):
 def text_handler(message):
     global step
     global cursordb
-    text = message.text.lower()
+    text = message.text
     chat_id = message.chat.id
     textString = text
     if step == 1:
